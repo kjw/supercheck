@@ -6,7 +6,7 @@ a Haskell testing library that is significantly different from the now commonpla
 xUnit style of testing library.
 
 How does it work?
----------------------------------------------------------------------------------
+=================================================================================
 
 With SuperCheck, as with QuickCheck, one tests code by defining invariants -
 predicates that must always hold true for a piece of code, for any data the
@@ -14,7 +14,7 @@ code may operate on. During a test run, each declared invariant (called a
 property in SuperCheck) is run multiple times, with randomly generated data.
 
 Defining arbitrary() constructors
----------------------------------------------------------------------------------
+=================================================================================
 
 To test a class we need to let SuperCheck know how to create a random instance.
 We do this by defining an arbitrary() static method in the class. This is an
@@ -46,13 +46,13 @@ instance also provides methods to ease the construction of arbitrary objects
 (the example above makes use of select()).
 
 Defining properties
----------------------------------------------------------------------------------
+=================================================================================
 
 Once we have arbitrary method definitions for classes we want to test, we can
 define invariants for the class's code. Let us imagine that the Point2D class
 from the example in the section above defines add(), subtract(), isZero(),
 negative() and equals() methods. We could write a few invariants about the 
-mathematics of Point2Ds.::
+mathematics of Point2Ds::
 
   Point2DInvariants.java
   ----------------------
@@ -81,10 +81,10 @@ A property should return true it it holds for the given arguments. If it does no
 hold, it should return false.
 
 Executing a test run
----------------------------------------------------------------------------------
+=================================================================================
 
 We can run the invariants declared in the Point2DInvariants class above by
-invoking a single Java line.::
+invoking a single Java line::
 
   new TestRun().runOn(Point2DInvariants.class, 10000);
   
