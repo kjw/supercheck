@@ -11,14 +11,14 @@ How does it work?
 With SuperCheck, as with QuickCheck, one tests code by defining invariants -
 predicates that must always hold true for a piece of code, for any data the
 code may operate on. During a test run, each declared invariant (called a 
-property in SuperCheck) is run multiple times, with randomly generated data.
+property in SuperCheck) is executed multiple times, with randomly generated data.
 
 Defining arbitrary() constructors
 =================================================================================
 
 To test a class we need to let SuperCheck know how to create a random instance.
 We do this by defining an arbitrary() static method in the class. This is an
-example for a possible "Point2D" class.::
+example for a possible "Point2D" class::
 
   public static Point2D arbitrary(Gen gen) {
       switch (gen.select(0.1, 0.9)) {
