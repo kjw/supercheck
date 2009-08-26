@@ -81,21 +81,12 @@ public class TestRun {
         Gen gen = new Gen();
 
         for (int i=0; i<times; i++) {
-            Object[] params = new Object[prop.getParameterTypes().length];
+            int paramCount = prop.getParameterTypes().length;
+            Object[] params = new Object[paramCount];
 
-            for (Class<?> paramT : prop.getParameterTypes()) {
-                try {
-                    Method maker = paramT.getDeclaredMethod("arbitrary", 
-                            new Class[] { Gen.class });
-                    params[0] = maker.invoke(null, new Object[] { gen });
-                } catch (NoSuchMethodException e) {
-                    throw new TestException("Missing arbitrary() definition on: "
-                            + paramT.getName());
-                } catch (InvocationTargetException e) {
-                    throw new TestException(e.toString());
-                } catch (IllegalAccessException e) {
-                    throw new TestException(e.toString());
-                }
+            for (int pIdx=0; pIdx<paramCount; pIdx++) {
+                Class<?> paramT = prop.getParameterTypes()[pIdx];
+                params[pIdx] = gen.createArbitraryFor(paramT);
             }
 
             if (!runOn(prop, params)) {
@@ -132,5 +123,5 @@ public class TestRun {
             out.println(prefix + (i+1) + ". " + ary[i]);
         }
     }
-	
+    
 }

@@ -1,5 +1,8 @@
 package tbc.supercheck;
 
+import java.lang.reflect.Array;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Random;
 
 /**
@@ -106,6 +109,36 @@ public class Gen {
         }
         return probabilities.length - 1; // because our normalisation
                                          // may suffer rounding errors
+    }
+    
+    /**
+     * Creates an arbitrary array, whose contents are arbitrary objects. There
+     * is a 10% chance that a zero-length array will be returned. Otherwise,
+     * the array with have a length between 1 and 1024, inclusive. The arbitraryT
+     * type must implement an arbitrary() method.
+     * <p>
+     * An example, where Point2D alsoimplements arbitrary():
+     * <pre>public static PointSet arbitrary(Gen gen) {
+     *     return new PointSet.fromArray(arbArray(Point2D.class))
+     * }</pre>
+     * 
+     * Be careful of circular dependency. If an arbitrary() definition in class
+     * A calls this method, passing class A, then infinite recursion will occur.
+     * 
+     * @return an arbitrary object array
+     */
+    @SuppressWarnings("unchecked")
+    public <A> A[] arbArray(Class<A> arbitraryT) {
+        switch (select(0.1f, 0.9f)) {
+        case 0:
+            return (A[]) Array.newInstance(arbitraryT, 0);
+        case 1: default:
+            A[] ary = (A[]) Array.newInstance(arbitraryT, choose(1, 1024));
+            for (int idx=0; idx<ary.length; idx++) {
+                ary[idx] = (A) createArbitraryFor(arbitraryT);
+            }
+            return ary;
+        }
     }
     
     /** 
@@ -283,6 +316,21 @@ public class Gen {
                 cs[idx] = (char) random.nextInt(256); // inline of arbChar()
             }
             return new String(cs);
+        }
+    }
+    
+    Object createArbitraryFor(Class<?> arbitraryT) throws TestException {
+        try {
+            Method maker = arbitraryT.getDeclaredMethod("arbitrary", 
+                    new Class[] { Gen.class });
+            return maker.invoke(null, new Object[] { this });
+        } catch (NoSuchMethodException e) {
+            throw new TestException("Missing arbitrary() definition on: "
+                    + arbitraryT.getName());
+        } catch (InvocationTargetException e) {
+            throw new TestException(e.toString());
+        } catch (IllegalAccessException e) {
+            throw new TestException(e.toString());
         }
     }
 	
