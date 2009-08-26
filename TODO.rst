@@ -11,12 +11,14 @@ A few hours, but no more than 3
   SILENT is much like now, NORMAL prints some sort of indication that execution
   is on-going, VERBOSE prints full details of each property test.
   
-- Gen must support construction of arbitrary arrays, of any type. Something like
-  public <A> A[] arbArray(Class<?> type). But also need primitive type arrays.
+- Gen must support construction of arbitrary primitive arrays.
 
 - Properties should be allowed to take objects that wrap primitives (Boolean,
   etc). TestRun should handle these by creating arbitrary primitive values,
   probably via Gen calls.
+  
+- Properties should be allowed to take primitive arrays or arrays of arbitrary
+  objects.
 
 Involved, more than 3 hours, maybe days
 =================================================================================
