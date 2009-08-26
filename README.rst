@@ -2,8 +2,7 @@ SuperCheck - A Java implementation of QuickCheck
 =================================================================================
 
 SuperCheck is a Java 1.5 and greater implementation of QuickCheck. QuickCheck is
-a Haskell testing library that is significantly different from the now commonplace
-xUnit style of testing library.
+a Haskell testing library that tests invariants with arbitrary data.
 
 How does it work?
 =================================================================================
