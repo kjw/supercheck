@@ -35,7 +35,7 @@ a zero point). Having zero points turn up 10% of the time will improve the chanc
 of a test hitting a boundry case. If our arbitrary method consisted only of the
 body of the second case then we would get very few zero points.
 
-All arbitrary methods must be called "arbitrary", must be public, must be static
+All arbitrary methods must be called ``arbitrary``, must be public, must be static
 and must take a Gen object as their first and only argument. Their return type
 must be their enclosing type.
 
@@ -76,7 +76,7 @@ mathematics of Point2Ds::
 Properties can be declared anywhere, in any class, but they must follow some 
 rules. Though they can take any number of arguments, all arguments they do take 
 must be classes that declare arbitrary methods. The property must have a name
-beginning with "prop_", must be static, must be public and must return a boolean.
+beginning with ``prop_``, must be static, must be public and must return a boolean.
 A property should return true it it holds for the given arguments. If it does not
 hold, it should return false.
 
