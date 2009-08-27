@@ -19,6 +19,8 @@ public class TestRun {
     
     private boolean printSuccessRuns      = false;
     
+    private Recording recording           = new Recording();
+    
     /**
      * Set to true to make TestRun print out details of successful property 
      * tests, not just those that fail. E.g.:
@@ -39,6 +41,10 @@ public class TestRun {
     public TestRun setContProp(boolean b) {
         continuePropAfterFail = b;
         return this;
+    }
+    
+    public Recording getRecording() {
+        return recording;
     }
 	
     /**
@@ -79,7 +85,6 @@ public class TestRun {
         System.out.print("Running " + prop.getName() + " " + times + " times... ");
         
         Gen gen = new Gen();
-        boolean overallSuccess = true;
 
         for (int i=0; i<times; i++) {
             int paramCount = prop.getParameterTypes().length;
@@ -93,23 +98,23 @@ public class TestRun {
             if (!runOn(prop, params)) {
                 System.out.println("\n! Failed on try " + (i+1) + " for params: ");
                 printParamList(params, System.out, "\t");
-                overallSuccess = false;
                 
                 if (!continuePropAfterFail) {
-                    break;
+                    /* Record the partial completion */
+                    recording.addTestEvent(prop, gen.getSeed(), i+1);
+                    return;
                 }
-                
-                overallSuccess = false;
                 
             } else if (printSuccessRuns) {
                 System.out.println("\n* Passed for params: ");
                 printParamList(params, System.out, "\t");
             }
         }
+        
+        /* Record the successful completion */
+        recording.addTestEvent(prop, gen.getSeed(), times);
 
-        if (overallSuccess) {
-            System.out.println("success.");
-        }
+        System.out.println("success.");
     }
 
     private boolean runOn(Method prop, Object[] params) throws TestException {

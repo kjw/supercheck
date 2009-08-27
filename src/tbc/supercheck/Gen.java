@@ -19,10 +19,9 @@ import java.util.Random;
  */
 public class Gen {
 
-    private Random random; {
-        random = new Random();
-        random.setSeed(System.currentTimeMillis());
-    }
+    private long randomSeed = System.currentTimeMillis();
+    
+    private Random random   = new Random(randomSeed);
 
     /** 
      * Answers a random object, selected from the objects in the possibles 
@@ -360,5 +359,12 @@ public class Gen {
             throw new TestException(e.toString());
         }
     }
-	
+    
+    long getSeed() {
+        return randomSeed;
+    }
+    
+    void setSeed(long randomSeed) {
+        random.setSeed(randomSeed);
+    }
 }
