@@ -354,7 +354,8 @@ public class Gen {
             throw new TestException("Missing arbitrary() definition on: "
                     + arbitraryT.getName());
         } catch (InvocationTargetException e) {
-            throw new TestException(e.toString());
+            throw new TestException(arbitraryT.getName() + ".arbitrary() threw " +
+                    e.getCause());
         } catch (IllegalAccessException e) {
             throw new TestException(e.toString());
         }

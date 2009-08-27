@@ -116,7 +116,7 @@ public class TestRun {
         try {
             return (Boolean) prop.invoke(null, params);
         } catch (InvocationTargetException e) {
-            throw new TestException(e.toString());
+            throw new TestException(prop.getName() + " threw: " + e.getCause());
         } catch (IllegalAccessException e) {
             throw new TestException(e.toString());
         }
