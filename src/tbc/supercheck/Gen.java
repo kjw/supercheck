@@ -64,9 +64,11 @@ public class Gen {
      *         return new Line(gen.arbInt(), gen.arbInt());
      * }</pre>
      * 
-     * @return an int in the range [to, from]
+     * @return an int in the range [from, to]
      */
     public int choose(int from, int to) {
+        if (from == to) return from;
+        
         return random.nextInt(to - from + 1) + from;
     }
     
@@ -112,6 +114,30 @@ public class Gen {
     }
     
     /**
+     * Answers a float within the integer range [from, to]. In this example a 
+     * loose quad tree is created with a k value (real number) somewhere between 
+     * 1 and 3:
+     * 
+     * <pre>LooseQuadTree.createWithK(within(1, 3))</pre>
+     * 
+     * The integer boundary values have a 20% probability of being returned.
+     * 
+     * @return a float within the range [from, to]
+     */
+    public float within(int from, int to) {
+        if (from == to) return from;
+        
+        switch (select(0.1f, 0.1f, 0.8f)) {
+        case 0:
+            return from;
+        case 1:
+            return to;
+        case 2: default:
+            return random.nextFloat() + choose(from, to - 1);
+        }
+    }
+    
+    /**
      * Creates an arbitrary array, whose contents are arbitrary objects. There
      * is a 10% chance that a zero-length array will be returned. Otherwise,
      * the array with have a length between 1 and 1024, inclusive. The arbitraryT
@@ -146,7 +172,7 @@ public class Gen {
      * the values MAX_VALUE, MIN_VALUE, 0, -1 and 1. That is, the probability of 
      * receiving these values is higher than with a call to Random.nextInt(), but 
      * is still low in comparison to the probability of receiving an integer that 
-     * is not of these values. This is intended to improve the testing of boundry 
+     * is not of these values. This is intended to improve the testing of corner 
      * cases.
      * 
      * @return an arbitrary int
