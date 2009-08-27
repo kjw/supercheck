@@ -76,9 +76,10 @@ public class TestRun {
      * specified by a reflected reference instead of a name.
      */
     public void runOn(Method prop, int times) throws TestException {
-        System.out.println("Running " + prop.getName() + " " + times + " times...");
+        System.out.print("Running " + prop.getName() + " " + times + " times... ");
         
         Gen gen = new Gen();
+        boolean overallSuccess = true;
 
         for (int i=0; i<times; i++) {
             int paramCount = prop.getParameterTypes().length;
@@ -90,22 +91,25 @@ public class TestRun {
             }
 
             if (!runOn(prop, params)) {
-                System.out.println("\t! Failed for params: ");
+                System.out.println("\n! Failed on try " + (i+1) + " for params: ");
                 printParamList(params, System.out, "\t");
-                System.out.println();
+                overallSuccess = false;
                 
                 if (!continuePropAfterFail) {
                     break;
                 }
                 
+                overallSuccess = false;
+                
             } else if (printSuccessRuns) {
-                System.out.println("\t* Passed for params: ");
+                System.out.println("\n* Passed for params: ");
                 printParamList(params, System.out, "\t");
-                System.out.println();
             }
         }
 
-        System.out.println("\t" + prop.getName() + " done.");
+        if (overallSuccess) {
+            System.out.println("success.");
+        }
     }
 
     private boolean runOn(Method prop, Object[] params) throws TestException {
