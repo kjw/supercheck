@@ -207,7 +207,7 @@ public class Gen {
      * 
      * @return an arbitrary float
      */
-    public float arbFloat() {
+    public float arbNastyFloat() {
         switch (select(0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.7f)) {
         case 0:
             return Float.NaN;
@@ -232,7 +232,7 @@ public class Gen {
      * 
      * @return an arbitrary float
      */
-    public float arbNFloat() {
+    public float arbFloat() {
         switch (select(0.05f, 0.05f, 0.05f, 0.85f)) {
         case 0:
             return Float.MAX_VALUE;
@@ -252,7 +252,7 @@ public class Gen {
      * 
      * @return an arbitrary double
      */
-    public double arbDouble() {
+    public double arbNastyDouble() {
         switch (select(0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.7f)) {
         case 0:
             return Double.NaN;
@@ -277,7 +277,7 @@ public class Gen {
      * 
      * @return an arbitrary double
      */
-    public double arbNDouble() {
+    public double arbDouble() {
         switch (select(0.05f, 0.05f, 0.05f, 0.85f)) {
         case 0:
             return Double.MAX_VALUE;
