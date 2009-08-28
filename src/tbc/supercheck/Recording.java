@@ -19,6 +19,9 @@ import java.util.ArrayList;
  * no longer match what occured during the recording. Because of this, if the
  * type signatures of properties have changed between the time of recording and
  * playback, the playback will fail.
+ * <p>
+ * Properties tested during the recording must be available on the classpath when
+ * a recording is unserialised.
  * 
  * @author Karl Jonathan Ward <karl.j.ward@googlemail.com>
  */
@@ -41,14 +44,31 @@ public class Recording implements Serializable {
         private void writeObject(ObjectOutputStream out) throws IOException {
             out.writeLong(randomSeed);
             out.writeInt(times);
-            // TODO Serialise property signature
+            out.writeUTF(property.getDeclaringClass().getCanonicalName());
+            out.writeUTF(property.getName());
+            out.writeInt(property.getParameterTypes().length);
+            for (Class<?> paramT : property.getParameterTypes()) {
+                out.writeUTF(paramT.getCanonicalName());
+            }
         }
         
         private void readObject(ObjectInputStream in) throws IOException, 
                                                       ClassNotFoundException {
             randomSeed = in.readLong();
             times = in.readInt();
-            // TODO Recreate property from signature
+            String propName = in.readUTF();
+            Class<?> declaringClass = Class.forName(in.readUTF());
+            Class<?>[] paramTs = new Class<?>[in.readInt()];
+            for (int pIdx=0; pIdx < paramTs.length; pIdx++) {
+                paramTs[pIdx] = Class.forName(in.readUTF());
+            }
+            
+            try {
+                property = declaringClass.getMethod(propName, paramTs);
+            } catch (NoSuchMethodException e) {
+                throw new IOException("Can't recreate recording - no such property "
+                        + declaringClass.getName() + "." + propName + " in classpath.");
+            }
         }
     }
     
