@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * playback, the playback will fail.
  * <p>
  * Properties tested during the recording must be available on the classpath when
- * a recording is unserialised.
+ * a recording is deserialized.
  * 
  * @author Karl Jonathan Ward <karl.j.ward@googlemail.com>
  */
