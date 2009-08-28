@@ -115,7 +115,7 @@ some data::
 Recording a test run
 =================================================================================
 
-A record of a test run is maintained and can be retrieved by calling the 
+Test runs are recorded automatically and these recording can be retrieved via the 
 ``getRecord()`` method on ``TestRun``. This will return a serializable ``Recording``
 object which can be used to play back the test run. Playback will interrogate the 
 same properties, in order, using the same data::
