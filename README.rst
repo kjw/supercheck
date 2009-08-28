@@ -111,3 +111,21 @@ It can also be told to continue testing a property even after it has failed for
 some data::
 
   new TestRun().setcontProp(true).runOn(Point2DInvariants.class, 10000);
+  
+Recording a test run
+=================================================================================
+
+A record of a test run is maintained and can be retrieved by calling the 
+``getRecord()`` method on ``TestRun``. This will return a serializable ``Recording``
+object which can be used to play back the test run. Playback will interrogate the 
+same properties, in order, using the same data::
+
+  TestRun trOne = new TestRun();
+  trOne.runOn(Point2DInvariants.class, 10000);
+  trOne.runOn(QuickSortInvariants.class, 10000);
+  
+  Recording recording = trOne.getRecording();
+  TestRun trTwo = new trTwo();
+  trTwo.runRecording(recording);
+  
+In this example, ``trOne`` and ``trTwo`` perform the same tests.
