@@ -43,8 +43,50 @@ public class TestRun {
         return this;
     }
     
+    /**
+     * Answers a recording of the tests executed by this test run. The order of
+     * properties tested is remembered, along with a random seed value for each.
+     * A recording can be played back by calling {@link #runRecording(Recording)}.
+     * <p>
+     * A Recoding may be serialised using the Java Serialization API. In this
+     * example the same tests would be executed twice:
+     * <pre>
+     * // Perform a test run.
+     * TestRun testRun = new TestRun();
+     * testRun.runOn(SomeInvariants.class, 10000);
+     * testRun.runOn(SomeOtherInvariants.class, 10000);
+     * 
+     * // Serialise the test run's recording.
+     * ObjectOutputStream oout = new ObjectOutputStream(new FileOutputStream(filename));
+     * oout.writeObject(new TestRun().getRecording());
+     * oout.close();
+     * 
+     * // Retrieve the recording.
+     * ObjectInputStream oin = new ObjectInputStream(new FileInputStream(filename));
+     * Recording recording = (Recording) oin.readObject();
+     * oin.close();
+     * 
+     * // Play the recording.
+     * TestRun playBackTestRun = new TestRun();
+     * playBackTestRun.runRecording(recording);
+     * </pre>
+     * 
+     * @return a Recording of property tests
+     */
     public Recording getRecording() {
         return recording;
+    }
+    
+    /**
+     * Re-runs the tests remembered by a Recording, in the same order and with
+     * the same data. However, if the signatures of any properties in the recording
+     * have changed since the recording was made, play back will fail. This is
+     * because only the random seeds used to generate data are remembered in the
+     * recording. (If the arguments to a property have changed, the wrong data
+     * will be reproduced.)
+     */
+    public void runRecording(Recording recording) {
+        recording.playBack(this);
     }
 	
     /**
@@ -82,10 +124,15 @@ public class TestRun {
      * specified by a reflected reference instead of a name.
      */
     public void runOn(Method prop, int times) throws TestException {
+        runOn(prop, times, System.currentTimeMillis());
+    }
+    
+    void runOn(Method prop, int times, long seed) throws TestException {
         System.out.print("Running " + prop.getName() + " " + times + " times... ");
-        
-        Gen gen = new Gen();
 
+        Gen gen = new Gen();
+        gen.setSeed(seed);
+        
         for (int i=0; i<times; i++) {
             int paramCount = prop.getParameterTypes().length;
             Object[] params = new Object[paramCount];
@@ -101,7 +148,7 @@ public class TestRun {
                 
                 if (!continuePropAfterFail) {
                     /* Record the partial completion */
-                    recording.addTestEvent(prop, gen.getSeed(), i+1);
+                    recording.addTestEvent(prop, gen.getSeed(), times);
                     return;
                 }
                 

@@ -1,5 +1,9 @@
 package tbc.supercheck;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
@@ -18,9 +22,12 @@ import java.util.ArrayList;
  * 
  * @author Karl Jonathan Ward <karl.j.ward@googlemail.com>
  */
-public class Recording {
-    
-    private class TestEvent {
+public class Recording implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    private class TestEvent implements Serializable {
+        private static final long serialVersionUID = 1L;
+        
         private Method property;
         private long randomSeed;
         private int times;
@@ -30,11 +37,30 @@ public class Recording {
             this.randomSeed = randomSeed;
             this.times = times;
         }
+        
+        private void writeObject(ObjectOutputStream out) throws IOException {
+            out.writeLong(randomSeed);
+            out.writeInt(times);
+            // TODO Serialise property signature
+        }
+        
+        private void readObject(ObjectInputStream in) throws IOException, 
+                                                      ClassNotFoundException {
+            randomSeed = in.readLong();
+            times = in.readInt();
+            // TODO Recreate property from signature
+        }
     }
     
     private ArrayList<TestEvent> testEvents = new ArrayList<TestEvent>();
     
     void addTestEvent(Method property, long randomSeed, int times) {
         testEvents.add(new TestEvent(property, randomSeed, times));
+    }
+    
+    void playBack(TestRun testRun) {
+        for (TestEvent e : testEvents) {
+            testRun.runOn(e.property, e.times, e.randomSeed);
+        }
     }
 }
