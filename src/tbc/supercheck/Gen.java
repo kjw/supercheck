@@ -365,6 +365,6 @@ public class Gen {
     }
     
     void setSeed(long randomSeed) {
-        random.setSeed(randomSeed);
+        random.setSeed(this.randomSeed = randomSeed);
     }
 }

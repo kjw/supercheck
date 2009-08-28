@@ -82,8 +82,8 @@ public class TestRun {
      * the same data. However, if the signatures of any properties in the recording
      * have changed since the recording was made, play back will fail. This is
      * because only the random seeds used to generate data are remembered in the
-     * recording. (If the arguments to a property have changed, the wrong data
-     * will be reproduced.)
+     * recording - if the arguments to a property have changed, the wrong data
+     * will be reproduced.
      */
     public void runRecording(Recording recording) {
         recording.playBack(this);
