@@ -48,7 +48,7 @@ public class TestRun {
      * properties tested is remembered, along with a random seed value for each.
      * A recording can be played back by calling {@link #runRecording(Recording)}.
      * <p>
-     * A Recoding may be serialised using the Java Serialization API. In this
+     * A Recoding may be serialized using the Java Serialization API. In this
      * example the same tests would be executed twice:
      * <pre>
      * // Perform a test run.
@@ -56,7 +56,7 @@ public class TestRun {
      * testRun.runOn(SomeInvariants.class, 10000);
      * testRun.runOn(SomeOtherInvariants.class, 10000);
      * 
-     * // Serialise the test run's recording.
+     * // Serialize the test run's recording.
      * ObjectOutputStream oout = new ObjectOutputStream(new FileOutputStream(filename));
      * oout.writeObject(new TestRun().getRecording());
      * oout.close();
