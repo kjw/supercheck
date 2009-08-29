@@ -83,4 +83,19 @@ public class Recording implements Serializable {
             testRun.runOn(e.property, e.times, e.randomSeed);
         }
     }
+    
+    /**
+     * Get a written description of recorded events. Note that the return string
+     * will have many new line chars.
+     * 
+     * @return a long string description
+     */
+    public String toDescription() {
+        String d = new String();
+        d += testEvents.size() + " test events:\n";
+        for (TestEvent e : testEvents) {
+            d += e.property.getName() + " runs=" + e.times + " seed=" + e.randomSeed + "\n";
+        }
+        return d;
+    }
 }
