@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
  */
 public class TestRun {
     
+    // TODO This is not compatible with recording playback.
     private boolean continuePropAfterFail = false;
     
     private boolean printSuccessRuns      = false;

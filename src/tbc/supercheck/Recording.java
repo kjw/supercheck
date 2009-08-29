@@ -94,7 +94,9 @@ public class Recording implements Serializable {
         String d = new String();
         d += testEvents.size() + " test events:\n";
         for (TestEvent e : testEvents) {
-            d += e.property.getName() + " runs=" + e.times + " seed=" + e.randomSeed + "\n";
+            d += e.property.getName() 
+              + " runs=" + e.times 
+              + " seed=" + e.randomSeed + "\n";
         }
         return d;
     }
