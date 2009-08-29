@@ -12,13 +12,6 @@ A few hours, but no more than 3
   is on-going, VERBOSE prints full details of each property test.
   
 - Gen must support construction of arbitrary primitive arrays.
-
-- Properties should be allowed to take objects that wrap primitives (Boolean,
-  etc). TestRun should handle these by creating arbitrary primitive values,
-  probably via Gen calls.
-  
-- Properties should be allowed to take primitive arrays or arrays of arbitrary
-  objects.
   
 - If continuing a property after a fail, do so only if the property is not failing
   for _every_ try. Also, if a certain number of tries fail, stop. By default,

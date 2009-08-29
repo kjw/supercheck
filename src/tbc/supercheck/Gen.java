@@ -166,6 +166,52 @@ public class Gen {
         }
     }
     
+    /**
+     * Answers an arbitrary byte.  Like with {@link #arbInt()}, the values 
+     * MAX_VALUE, MIN_VALUE, 0, -1 and 1 have a hightened chance of selection.
+     * 
+     * @return an arbitrary byte
+     */
+    public byte arbByte() {
+        switch (select(0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.75f)) {
+        case 0:
+            return 0;
+        case 1:
+            return Byte.MAX_VALUE;
+        case 2:
+            return Byte.MIN_VALUE;
+        case 3:
+            return -1;
+        case 4:
+            return 1;
+        case 5: default:
+            return (byte) random.nextInt();
+        }
+    }
+    
+    /**
+     * Answers an arbitrary short. Like with {@link #arbInt()}, the values 
+     * MAX_VALUE, MIN_VALUE, 0, -1 and 1 have a hightened chance of selection.
+     * 
+     * @return an arbitrary short
+     */
+    public short arbShort() {
+        switch (select(0.05f, 0.05f, 0.05f, 0.05f, 0.05f, 0.75f)) {
+        case 0:
+            return 0;
+        case 1:
+            return Short.MAX_VALUE;
+        case 2:
+            return Short.MIN_VALUE;
+        case 3:
+            return -1;
+        case 4:
+            return 1;
+        case 5: default:
+            return (short) random.nextInt();
+        }
+    }
+    
     /** 
      * Answers an arbitrary integer, with an inflated probability of returing 
      * the values MAX_VALUE, MIN_VALUE, 0, -1 and 1. That is, the probability of 
@@ -344,7 +390,17 @@ public class Gen {
         }
     }
     
-    Object createArbitraryFor(Class<?> arbitraryT) throws TestException {
+    <T> Object createArbitraryFor(Class<T> arbitraryT) throws TestException {
+        if (arbitraryT.isEnum()) {
+            T[] enumCs = arbitraryT.getEnumConstants();
+            return enumCs[choose(0, enumCs.length)];
+        } else if (arbitraryT.isArray()) {
+            return arbArray(arbitraryT.getComponentType());
+        } else if (arbitraryT.isPrimitive()) {
+            return createPrimitiveFor(arbitraryT);
+        }
+        
+        /* otherwise we want an arbitrary arbitraryT */
         try {
             Method maker = arbitraryT.getDeclaredMethod("arbitrary", 
                     new Class[] { Gen.class });
@@ -357,6 +413,28 @@ public class Gen {
                     e.getCause());
         } catch (IllegalAccessException e) {
             throw new TestException(e.toString());
+        }
+    }
+    
+    Object createPrimitiveFor(Class<?> primitiveT) {
+        if (primitiveT == Boolean.TYPE) {
+            return arbBoolean();
+        } else if (primitiveT == Character.TYPE) {
+            return arbChar();
+        } else if (primitiveT == Byte.TYPE) {
+            return arbByte();
+        } else if (primitiveT == Short.TYPE) {
+            return arbShort();
+        } else if (primitiveT == Integer.TYPE) {
+            return arbInt();
+        } else if (primitiveT == Long.TYPE) {
+            return arbLong();
+        } else if (primitiveT == Float.TYPE) {
+            return arbFloat();
+        } else if (primitiveT == Double.TYPE) {
+            return arbDouble();
+        } else { /* Void.TYPE */
+            return null;
         }
     }
     

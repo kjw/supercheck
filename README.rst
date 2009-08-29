@@ -75,11 +75,18 @@ mathematics of Point2Ds::
   
 Properties can be declared anywhere, in any class, but they must follow some 
 rules. Though they can take any number of arguments, all arguments they do take 
-must be classes that declare arbitrary methods. The property must have a name
-beginning with ``prop_``, must be static, must be public and must return a boolean.
-A property should return true it it holds for the given arguments. If it does not
-hold, it should return false. Properties may declare to throw exceptions. However,
-a test run will halt if a property throws an exception.
+must be one of:
+
+- a class that declares an ``arbitrary()`` method,
+- an enumeration,
+- a primitive,
+- an array of any of the above.
+
+The property must have a name beginning with ``prop_``, must be static, must be 
+public and must return a boolean. A property should return true it it holds for 
+the given arguments. If it does not hold, it should return false. Properties may 
+declare to throw exceptions. However, a test run will halt if a property throws 
+an exception.
 
 Executing a test run
 =================================================================================
