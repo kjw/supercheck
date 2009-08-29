@@ -139,7 +139,7 @@ public class Gen {
     /**
      * Creates an arbitrary array, whose contents are arbitrary objects. There
      * is a 10% chance that a zero-length array will be returned. Otherwise,
-     * the array with have a length between 1 and 1024, inclusive. The arbitraryT
+     * the array with have a length between 1 and 10, inclusive. The arbitraryT
      * type must implement an arbitrary() method.
      * <p>
      * An example, where Point2D alsoimplements arbitrary():
@@ -158,7 +158,7 @@ public class Gen {
         case 0:
             return (A[]) Array.newInstance(arbitraryT, 0);
         case 1: default:
-            A[] ary = (A[]) Array.newInstance(arbitraryT, choose(1, 1024));
+            A[] ary = (A[]) Array.newInstance(arbitraryT, choose(1, 10));
             for (int idx=0; idx<ary.length; idx++) {
                 ary[idx] = (A) createArbitraryFor(arbitraryT);
             }
@@ -393,11 +393,13 @@ public class Gen {
     <T> Object createArbitraryFor(Class<T> arbitraryT) throws TestException {
         if (arbitraryT.isEnum()) {
             T[] enumCs = arbitraryT.getEnumConstants();
-            return enumCs[choose(0, enumCs.length)];
+            return enumCs[choose(0, enumCs.length - 1)];
         } else if (arbitraryT.isArray()) {
             return arbArray(arbitraryT.getComponentType());
         } else if (arbitraryT.isPrimitive()) {
             return createPrimitiveFor(arbitraryT);
+        } else if (arbitraryT == String.class) {
+            return arbString();
         }
         
         /* otherwise we want an arbitrary arbitraryT */

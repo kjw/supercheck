@@ -1,6 +1,8 @@
 Simple, 10 minute items
 =================================================================================
 
+- Arbitrary primitive array construction does not work.
+
 A few hours, but no more than 3
 =================================================================================
 
@@ -10,8 +12,6 @@ A few hours, but no more than 3
 - Improve the available verbosity levels in TestRun. SILENT, NORMAL and VERBOSE.
   SILENT is much like now, NORMAL prints some sort of indication that execution
   is on-going, VERBOSE prints full details of each property test.
-  
-- Gen must support construction of arbitrary primitive arrays.
   
 - If continuing a property after a fail, do so only if the property is not failing
   for _every_ try. Also, if a certain number of tries fail, stop. By default,
