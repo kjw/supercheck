@@ -80,7 +80,7 @@ must be one of:
 - a class that declares an ``arbitrary()`` method,
 - an enumeration,
 - a primitive,
-- an array of any of the above.
+- an array of any of the above (of any dimension).
 
 The property must have a name beginning with ``prop_``, must be static, must be 
 public and must return a boolean. A property should return true it it holds for 
