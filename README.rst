@@ -36,7 +36,8 @@ body of the second case then we would get very few zero points.
 
 All arbitrary methods must be called ``arbitrary``, must be public, must be static
 and must take a Gen object as their first and only argument. Their return type
-must be their enclosing type.
+must be their enclosing type. Arbitrary methods may declare to throw exceptions.
+Test run execution will halt if an exception is raised from an arbitrary method.
 
 Arbitrary definitions may of course invoke other arbitrary methods if the class
 type being constructed is a compound of other class types. Arbitrary primitive
@@ -77,7 +78,8 @@ rules. Though they can take any number of arguments, all arguments they do take
 must be classes that declare arbitrary methods. The property must have a name
 beginning with ``prop_``, must be static, must be public and must return a boolean.
 A property should return true it it holds for the given arguments. If it does not
-hold, it should return false.
+hold, it should return false. Properties may declare to throw exceptions. However,
+a test run will halt if a property throws an exception.
 
 Executing a test run
 =================================================================================
