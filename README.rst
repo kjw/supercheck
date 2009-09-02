@@ -20,11 +20,11 @@ We do this by defining an arbitrary() static method in the class. This is an
 example for a possible "Point2D" class::
 
   public static Point2D arbitrary(Gen gen) {
-      switch (gen.select(0.1, 0.9)) {
+      switch (gen.select(0.1f, 0.9f)) {
       case 0:
           return Point2D.ZERO;
       case 1: default:
-          return new Point2D(gen.arbNFloat(), gen.arbNFloat());
+          return new Point2D(gen.arbFloat(), gen.arbFloat());
       }
   }
   
@@ -43,7 +43,7 @@ Arbitrary definitions may of course invoke other arbitrary methods if the class
 type being constructed is a compound of other class types. Arbitrary primitive
 values can be generated using the Gen instance passed to the method. The Gen
 instance also provides methods to ease the construction of arbitrary objects
-(the example above makes use of select()).
+(the example above makes use of ``select()``).
 
 Defining properties
 =================================================================================
@@ -119,7 +119,7 @@ can be told to print out the data from successful property executions, like so::
 It can also be told to continue testing a property even after it has failed for
 some data::
 
-  new TestRun().setcontProp(true).runOn(Point2DInvariants.class, 10000);
+  new TestRun().setContProp(true).runOn(Point2DInvariants.class, 10000);
   
 Recording a test run
 =================================================================================
