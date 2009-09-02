@@ -142,7 +142,7 @@ public class Gen {
      * the array with have a length between 1 and 10, inclusive. The arbitraryT
      * type must implement an arbitrary() method.
      * <p>
-     * An example, where Point2D alsoimplements arbitrary():
+     * An example, where Point2D also implements arbitrary():
      * <pre>public static PointSet arbitrary(Gen gen) {
      *     return new PointSet.fromArray(arbArray(Point2D.class))
      * }</pre>

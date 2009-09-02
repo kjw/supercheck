@@ -31,7 +31,7 @@ example for a possible "Point2D" class::
 This arbitrary definition returns a "zero" point with at least 10% probability 
 (actually a tiny bit higher because the second case may inadvertently return
 a zero point). Having zero points turn up 10% of the time will improve the chances
-of a test hitting a boundry case. If our arbitrary method consisted only of the
+of a test hitting a corner case. If our arbitrary method consisted only of the
 body of the second case then we would get very few zero points.
 
 All arbitrary methods must be called ``arbitrary``, must be public, must be static
