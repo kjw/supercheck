@@ -15,8 +15,8 @@ import java.util.ArrayList;
  * executed.
  * <p>
  * A recording is valid so long as the properties it records events about do not
- * change their arguments. If they do, data generation from the random seed will
- * no longer match what occured during the recording. Because of this, if the
+ * change their method signatures. If they do, data generation from the random seed 
+ * will no longer match what occured during the recording. Because of this, if the
  * type signatures of properties have changed between the time of recording and
  * playback, the playback will fail.
  * <p>
