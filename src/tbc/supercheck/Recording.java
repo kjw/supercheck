@@ -20,10 +20,10 @@ import java.util.ArrayList;
  * @author Karl Jonathan Ward <karl.j.ward@googlemail.com>
  */
 public class Recording implements Serializable {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 2L;
 
     private class TestEvent implements Serializable {
-        private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 2L;
         
         private String containingClass;
         private String property;
