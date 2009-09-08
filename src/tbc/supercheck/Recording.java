@@ -87,7 +87,7 @@ public class Recording implements Serializable {
     					           + te.property
     					           + ". Its containing class, "
     					           + te.containingClass
-    					           + " is missing.");
+    					           + ", is missing.");
     			return;
     		}
     	}
