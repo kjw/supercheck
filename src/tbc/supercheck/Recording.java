@@ -1,8 +1,5 @@
 package tbc.supercheck;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -19,9 +16,6 @@ import java.util.ArrayList;
  * will no longer match what occured during the recording. Because of this, if the
  * type signatures of properties have changed between the time of recording and
  * playback, the playback will fail.
- * <p>
- * Properties tested during the recording must be available on the classpath when
- * a recording is deserialized.
  * 
  * @author Karl Jonathan Ward <karl.j.ward@googlemail.com>
  */
@@ -31,57 +25,72 @@ public class Recording implements Serializable {
     private class TestEvent implements Serializable {
         private static final long serialVersionUID = 1L;
         
-        private Method property;
+        private String containingClass;
+        private String property;
+        private String[] params;
         private long randomSeed;
         private int times;
         
-        private TestEvent(Method property, long randomSeed, int times) {
+        private TestEvent(String containingClass,
+        		          String property,
+        		          String[] params,
+        		          long randomSeed, 
+        		          int times) {
+            this.containingClass = containingClass;
             this.property = property;
+            this.params = params;
             this.randomSeed = randomSeed;
             this.times = times;
         }
         
-        private void writeObject(ObjectOutputStream out) throws IOException {
-            out.writeLong(randomSeed);
-            out.writeInt(times);
-            out.writeUTF(property.getDeclaringClass().getCanonicalName());
-            out.writeUTF(property.getName());
-            out.writeInt(property.getParameterTypes().length);
-            for (Class<?> paramT : property.getParameterTypes()) {
-                out.writeUTF(paramT.getCanonicalName());
-            }
-        }
-        
-        private void readObject(ObjectInputStream in) throws IOException, 
-                                                      ClassNotFoundException {
-            randomSeed = in.readLong();
-            times = in.readInt();
-            String propName = in.readUTF();
-            Class<?> declaringClass = Class.forName(in.readUTF());
-            Class<?>[] paramTs = new Class<?>[in.readInt()];
-            for (int pIdx=0; pIdx < paramTs.length; pIdx++) {
-                paramTs[pIdx] = Class.forName(in.readUTF());
-            }
-            
-            try {
-                property = declaringClass.getMethod(propName, paramTs);
-            } catch (NoSuchMethodException e) {
-                throw new IOException("Can't recreate recording - no such property "
-                        + declaringClass.getName() + "." + propName + " in classpath.");
-            }
+        private Method getPropertyMethod() throws ClassNotFoundException, 
+                                                  NoSuchMethodException {
+        	Class<?> containingT = Class.forName(containingClass);
+	    	Class<?>[] paramTs = new Class<?>[params.length];
+	    	for (int pIdx = 0; pIdx < paramTs.length; pIdx++) {
+	    		paramTs[pIdx] = Class.forName(params[pIdx]);
+	    	}
+	    	return containingT.getMethod(property, paramTs);
         }
     }
     
     private ArrayList<TestEvent> testEvents = new ArrayList<TestEvent>();
     
     void addTestEvent(Method property, long randomSeed, int times) {
-        testEvents.add(new TestEvent(property, randomSeed, times));
+    	String propertyName = property.getName();
+    	String containingClass = property.getDeclaringClass().getName();
+    	Class<?>[] paramTs = property.getParameterTypes();
+    	String[] params = new String[paramTs.length];
+    	for (int pIdx = 0; pIdx < params.length; pIdx++) {
+    		params[pIdx] = paramTs[pIdx].getName();
+    	}
+    	
+        testEvents.add(new TestEvent(containingClass,
+        		                     propertyName, 
+        		                     params,
+        		                     randomSeed, 
+        		                     times));
     }
     
     void playBack(TestRun testRun) {
-        for (TestEvent e : testEvents) {
-            testRun.runOn(e.property, e.times, e.randomSeed);
-        }
+    	for (TestEvent te : testEvents) {
+    		try {
+    			testRun.runOn(te.getPropertyMethod(), te.times, te.randomSeed);
+    		} catch (NoSuchMethodException e) {
+    			System.out.println("Cannot run recording for " 
+    					           + te.property
+    					           + ". Either it no longer exists or" 
+    					           + " its signature has changed.");
+    			return;
+    		} catch (ClassNotFoundException e) {
+    			System.out.println("Cannot run recording for "
+    					           + te.property
+    					           + ". Its containing class, "
+    					           + te.containingClass
+    					           + " is missing.");
+    			return;
+    		}
+    	}
     }
     
     /**
@@ -94,7 +103,7 @@ public class Recording implements Serializable {
         String d = new String();
         d += testEvents.size() + " test events:\n";
         for (TestEvent e : testEvents) {
-            d += e.property.getName() 
+            d += e.property 
               + " runs=" + e.times 
               + " seed=" + e.randomSeed + "\n";
         }
