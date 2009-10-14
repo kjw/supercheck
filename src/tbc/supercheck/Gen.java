@@ -3,6 +3,7 @@ package tbc.supercheck;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Hashtable;
 import java.util.Random;
 
 /**
@@ -19,9 +20,15 @@ import java.util.Random;
  */
 public class Gen {
 
-    private long randomSeed = System.currentTimeMillis();
+    private long randomSeed                      = System.currentTimeMillis();
     
-    private Random random   = new Random(randomSeed);
+    private Random random                        = new Random(randomSeed);
+    
+    private Hashtable<String, Float> floatParams = new Hashtable<String, Float>();
+    private Hashtable<String, Integer> intParams = new Hashtable<String, Integer>();
+    private Hashtable<String, String> strParams  = new Hashtable<String, String>();
+    
+    private static Gen quickGen                  = new Gen();
 
     /** 
      * Answers a random object, selected from the objects in the possibles 
@@ -316,6 +323,22 @@ public class Gen {
         }
     }
     
+    /**
+     * Answers an arbitrary float in the [0, range] range.
+     * 
+     * @return an arbitrary float
+     */
+    public float arbFloat(int range) {
+    	switch (select(0.05f, 0.05f, 0.9f)) {
+    	case 0:
+    		return 0.0f;
+    	case 1:
+    		return range;
+    	case 2: default:
+    		return random.nextFloat() + random.nextInt(range);
+    	}
+    }
+    
     /** 
      * Answers an arbitrary double. Like with {@link #arbInt()}, the  values 
      * NaN, POSITIVE_INFINITY, NEGATIVE_INFINITY, MAX_VALUE, MIN_VALUE and 0.0d 
@@ -390,6 +413,40 @@ public class Gen {
         }
     }
     
+    /**
+     * Answers a common Gen instance that can be used to call arbitrary() methods
+     * outside the context of SuperCheck.
+     * 
+     * @return a common Gen instance
+     */
+    public static Gen g() {
+    	return quickGen;
+    }
+    
+    public void setFloatParam(String name, float val) {
+    	floatParams.put(name, val);
+    }
+    
+    public float getFloatParam(String name) {
+    	return floatParams.get(name);
+    }
+    
+    public void setIntParam(String name, int val) {
+    	intParams.put(name, val);
+    }
+    
+    public int getIntParam(String name) {
+    	return intParams.get(name);
+    }
+    
+    public void setStrParam(String name, String val) {
+    	strParams.put(name, val);
+    }
+    
+    public String getStrParam(String name) {
+    	return strParams.get(name);
+    }
+    
     <T> Object createArbitraryFor(Class<T> arbitraryT) throws TestException {
         if (arbitraryT.isEnum()) {
             T[] enumCs = arbitraryT.getEnumConstants();
@@ -447,4 +504,5 @@ public class Gen {
     void setSeed(long randomSeed) {
         random.setSeed(this.randomSeed = randomSeed);
     }
+    
 }
