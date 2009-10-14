@@ -20,15 +20,13 @@ import java.util.Random;
  */
 public class Gen {
 
-    private long randomSeed                      = System.currentTimeMillis();
+    private long           randomSeed     = System.currentTimeMillis();
     
-    private Random random                        = new Random(randomSeed);
+    private Random         random         = new Random(randomSeed);
     
-    private Hashtable<String, Float> floatParams = new Hashtable<String, Float>();
-    private Hashtable<String, Integer> intParams = new Hashtable<String, Integer>();
-    private Hashtable<String, String> strParams  = new Hashtable<String, String>();
+    private ParameterBunch parameterBunch = new ParameterBunch();
     
-    private static Gen quickGen                  = new Gen();
+    private static Gen     quickGen       = new Gen();
 
     /** 
      * Answers a random object, selected from the objects in the possibles 
@@ -423,28 +421,12 @@ public class Gen {
     	return quickGen;
     }
     
-    public void setFloatParam(String name, float val) {
-    	floatParams.put(name, val);
+    public ParameterBunch getParams() {
+    	return parameterBunch;
     }
     
-    public float getFloatParam(String name) {
-    	return floatParams.get(name);
-    }
-    
-    public void setIntParam(String name, int val) {
-    	intParams.put(name, val);
-    }
-    
-    public int getIntParam(String name) {
-    	return intParams.get(name);
-    }
-    
-    public void setStrParam(String name, String val) {
-    	strParams.put(name, val);
-    }
-    
-    public String getStrParam(String name) {
-    	return strParams.get(name);
+    public void setParams(ParameterBunch newBunch) {
+    	parameterBunch = newBunch;
     }
     
     <T> Object createArbitraryFor(Class<T> arbitraryT) throws TestException {
