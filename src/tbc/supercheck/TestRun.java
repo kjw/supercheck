@@ -180,7 +180,13 @@ public class TestRun {
         }
     }
     
-    /** Run the next test run with the set of parameters passed in here. */
+    /** 
+     * Run the next tests with the set of parameters passed in here. The next 
+     * call, and only the next call, to a runOn() method will use these 
+     * parameters. For example:
+     * 
+     * <pre>new TestRun().with(params).runOn(Invariants.class, 10000);</pre>
+     */
     public TestRun with(ParameterBunch pb) {
     	nextParams = pb;
     	return this;
