@@ -12,18 +12,36 @@ import java.util.Hashtable;
  */
 public class ParameterBunch {
 
+	private static final String[] TYPE_NAMES = {
+		"String",
+		"Float",
+		"Int",
+		"Boolean"
+	};
+	
 	private enum ParamType {
 		STRING,
 		FLOAT,
-		INT
+		INT,
+		BOOLEAN
 	}
 
 	private class ParamEntry {
 		private Object value;
 		private ParamType type;
+		
+		@Override
+		public String toString() {
+			return value.toString() + " :" + TYPE_NAMES[type.ordinal()];
+		}
 	}
 
 	private Hashtable<String, ParamEntry> parameters = new Hashtable<String, ParamEntry>();
+	
+	@Override
+	public String toString() {
+		return parameters.toString();
+	}
 
 	public void setFloat(String name, float val) {
 		ParamEntry pe = new ParamEntry();
@@ -45,34 +63,51 @@ public class ParameterBunch {
 		pe.type = ParamType.STRING;
 		parameters.put(name, pe);
 	}
+	
+	public void setBoolean(String name, boolean val) {
+		ParamEntry pe = new ParamEntry();
+		pe.value = new Boolean(val);
+		pe.type = ParamType.BOOLEAN;
+		parameters.put(name, pe);
+	}
 
-	public float getFloat(String name) {
+	public float getFloat(String name, float otherwise) {
 		ParamEntry pe = parameters.get(name);
 
 		if (pe != null && pe.type == ParamType.FLOAT) {
 			return (Float)pe.value;
 		} else {
-			return 0.0f;
+			return otherwise;
 		}
 	}
 
-	public int getInt(String name) {
+	public int getInt(String name, int otherwise) {
 		ParamEntry pe = parameters.get(name);
 
 		if (pe != null && pe.type == ParamType.INT) {
 			return (Integer)pe.value;
 		} else {
-			return 0;
+			return otherwise;
 		}
 	}
 
-	public String getStr(String name) {
+	public String getStr(String name, String otherwise) {
 		ParamEntry pe = parameters.get(name);
 
 		if (pe != null && pe.type == ParamType.STRING) {
 			return (String)pe.value;
 		} else {
-			return "";
+			return otherwise;
+		}
+	}
+	
+	public boolean getBoolean(String name, boolean otherwise) {
+		ParamEntry pe = parameters.get(name);
+
+		if (pe != null && pe.type == ParamType.BOOLEAN) {
+			return (Boolean)pe.value;
+		} else {
+			return otherwise;
 		}
 	}
 }
