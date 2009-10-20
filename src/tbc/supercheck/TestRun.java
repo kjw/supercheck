@@ -22,6 +22,8 @@ public class TestRun {
     
     private Recording recording           = new Recording();
     
+    private ParameterBunch nextParams     = new ParameterBunch();
+    
     /**
      * Set to true to make TestRun print out details of successful property 
      * tests, not just those that fail. E.g.:
@@ -132,7 +134,10 @@ public class TestRun {
         System.out.print("Running " + prop.getName() + " " + times + " times... ");
 
         Gen gen = new Gen();
+        gen.setParams(nextParams);
         gen.setSeed(seed);
+        
+        nextParams = new ParameterBunch();
         
         for (int i=0; i<times; i++) {
             int paramCount = prop.getParameterTypes().length;
@@ -173,6 +178,12 @@ public class TestRun {
         } catch (IllegalAccessException e) {
             throw new TestException(e.toString());
         }
+    }
+    
+    /** Run the next test run with the set of parameters passed in here. */
+    public TestRun with(ParameterBunch pb) {
+    	nextParams = pb;
+    	return this;
     }
 
     private void printParamList(Object[] ary, PrintStream out, String prefix) {
