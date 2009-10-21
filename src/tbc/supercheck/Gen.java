@@ -433,8 +433,12 @@ public class Gen {
         if (arbitraryT.isEnum()) {
             T[] enumCs = arbitraryT.getEnumConstants();
             return enumCs[choose(0, enumCs.length - 1)];
-        } else if (arbitraryT.isArray()) {
-            return arbArray(arbitraryT.getComponentType());
+        } else if (arbitraryT.isArray() 
+        		&& arbitraryT.getComponentType().isPrimitive()) {
+            throw new TestException("Generation of primitive arrays is unsupported."
+            		+ " Use an array of primitive wrapper objects instead.");
+        } else if (arbitraryT.isArray() /* && comp not prim */) {
+        	return arbArray(arbitraryT.getComponentType());
         } else if (arbitraryT.isPrimitive()) {
             return createPrimitiveFor(arbitraryT);
         } else if (arbitraryT == String.class) {

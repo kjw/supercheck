@@ -79,14 +79,15 @@ must be one of:
 
 - a class that declares an ``arbitrary()`` method,
 - an enumeration,
-- a primitive,
-- an array of any of the above (of any dimension).
+- an array of any of the above (of any dimension),
+- a primitive.
 
-The property must have a name beginning with ``prop_``, must be static, must be 
-public and must return a boolean. A property should return true it it holds for 
-the given arguments. If it does not hold, it should return false. Properties may 
-declare to throw exceptions. However, a test run will halt if a property throws 
-an exception.
+An array of primitives cannot be automatically generated, instead use an array
+of wrapping objects (Boolean etc.) The property must have a name beginning with 
+``prop_``, must be static, must be public and must return a boolean. A property 
+should return true it it holds for the given arguments. If it does not hold, it 
+should return false. Properties may declare to throw exceptions. However, a test 
+run will halt if a property throws an exception.
 
 Executing a test run
 =================================================================================
