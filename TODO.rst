@@ -1,8 +1,6 @@
 Simple, 10 minute items
 ===============================================================================
 
-- Arbitrary primitive array construction does not work.
-
 A few hours, but no more than 3
 ===============================================================================
 
