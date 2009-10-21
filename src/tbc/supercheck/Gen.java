@@ -20,13 +20,10 @@ import java.util.Random;
  */
 public class Gen {
 
-    private long           randomSeed     = System.currentTimeMillis();
-    
-    private Random         random         = new Random(randomSeed);
-    
+    private long           randomSeed = System.currentTimeMillis();
+    private Random         random = new Random(randomSeed);
     private ParameterBunch parameterBunch = new ParameterBunch();
-    
-    private static Gen     quickGen       = new Gen();
+    private static Gen     quickGen = new Gen();
 
     /** 
      * Answers a random object, selected from the objects in the possibles 
