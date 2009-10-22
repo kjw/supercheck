@@ -20,6 +20,15 @@ import java.util.Random;
  */
 public class Gen {
 
+	/** A parameter that determines the maximum length of arbitrary arrays. */
+	public static final String PARAM_MAX_ARRAY_LENGTH = "Gen.MAX_ARRAY_LENGTH";
+	
+	/** A parameter that determines the maximum length of arbitrary strings. */
+	public static final String PARAM_MAX_STR_LENGTH = "Gen.MAX_STR_LENGTH";
+	
+	public static final int MAX_ARRAY_LENGTH_DEFAULT = 10;
+	public static final int MAX_STR_LENGTH_DEFAULT   = 1024;
+	
     private long           randomSeed = System.currentTimeMillis();
     private Random         random = new Random(randomSeed);
     private ParameterBunch parameterBunch = new ParameterBunch();
@@ -160,7 +169,9 @@ public class Gen {
         case 0:
             return (A[]) Array.newInstance(arbitraryT, 0);
         case 1: default:
-            A[] ary = (A[]) Array.newInstance(arbitraryT, choose(1, 10));
+        	int maxLength = getParams().getInt(PARAM_MAX_ARRAY_LENGTH,
+        			                           MAX_ARRAY_LENGTH_DEFAULT);
+            A[] ary = (A[]) Array.newInstance(arbitraryT, choose(1, maxLength));
             for (int idx=0; idx<ary.length; idx++) {
                 ary[idx] = (A) createArbitraryFor(arbitraryT);
             }
@@ -400,7 +411,9 @@ public class Gen {
         case 0:
             return "";
         case 1: default:
-            char[] cs = new char[choose(1, 1024)];
+        	int maxLength = getParams().getInt(PARAM_MAX_STR_LENGTH,
+        			                           MAX_STR_LENGTH_DEFAULT);
+            char[] cs = new char[choose(1, maxLength)];
             for (int idx=0; idx<cs.length; idx++) {
                 cs[idx] = (char) random.nextInt(256); // inline of arbChar()
             }
